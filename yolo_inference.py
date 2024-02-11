@@ -62,7 +62,10 @@ if __name__ == "__main__":
     if torch.cuda.is_available():
         torch.cuda.set_device(0)
 
-    model = YOLO("yolov8m.pt")
+    # model = YOLO("yolov8m.pt")
+    model = YOLO("./yolo_onnx/yolov8n.onnx")
+    # model = YOLO("./yolo_onnx/yolov8m.onnx")
+    # model = YOLO("./yolo_onnx/yolov8s.onnx")
     input_image = cv2.imread(image_path)
 
     start_time = time.time()
