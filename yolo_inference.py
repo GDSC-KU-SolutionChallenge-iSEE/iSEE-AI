@@ -4,14 +4,12 @@ import time
 import torch
 import cv2
 import os
+import shutil
 
 # %%
 # draw bus boxes to output_path
-def draw_boxes(image_path, boxes, output_path):
+def draw_boxes(image_path, boxes, cls, output_path):
     # Read the image
-    cls = boxes.cls.tolist()
-    boxes = boxes.xyxy.tolist()
-
     image = cv2.imread(image_path)
     # Convert tensor to NumPy array
     boxes_np = boxes.cpu().numpy() if isinstance(boxes, torch.Tensor) else boxes
@@ -31,13 +29,23 @@ def bus_crop_and_save(image_path, boxes, boxes_cls, output_dir):
     # Read the image
     image = cv2.imread(image_path)
     
+
+    # 해당 경로에 디렉토리 또는 파일이 존재하는지 확인
+    if os.path.exists(output_dir):
+        # 디렉토리인 경우 내부 파일/디렉토리까지 모두 삭제
+        if os.path.isdir(output_dir):
+            shutil.rmtree(output_dir)
+
+    # 새 디렉토리 생성
+    os.mkdir(output_dir)
+    
     # Convert tensor to NumPy array
-    boxes_np = boxes.cpu().numpy() if isinstance(boxes, torch.Tensor) else boxes
+    # boxes_np = boxes.cpu().numpy() if isinstance(boxes, torch.Tensor) else boxes
     idx = 0
     # Draw bounding boxes
     for xyxy, cls in zip(boxes, boxes_cls):
         if cls == 5:
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             x, y, x2, y2 = xyxy
             x, y, x2, y2 = int(x), int(y), int(x2), int(y2)
             output_path = os.path.join(output_dir,f'{idx}.jpg')
@@ -48,7 +56,7 @@ def bus_crop_and_save(image_path, boxes, boxes_cls, output_dir):
 
 if __name__ == "__main__":
     
-    image_path = "test8.jpg"
+    image_path = "/home/cvlab09/projects/joungbin/iSEE-AI/test2.png"
     output_path = 'output_image.jpg'
     output_dir = './cropped_bus'
     if torch.cuda.is_available():
@@ -66,7 +74,8 @@ if __name__ == "__main__":
     for xyxy, cls in zip(results[0].boxes.xyxy.tolist(), results[0].boxes.cls.tolist()):
         if cls == 5:
             print("Bus at", xyxy)
-
-    draw_boxes(image_path, results[0].boxes.xyxy.tolist(), output_path)
+            
+    # import pdb;pdb.set_trace()
+    draw_boxes(image_path, results[0].boxes.xyxy.tolist(), results[0].boxes.cls.tolist(), output_path)
     bus_crop_and_save(image_path, results[0].boxes.xyxy.tolist(), results[0].boxes.cls.tolist(), output_dir)
 # %%
