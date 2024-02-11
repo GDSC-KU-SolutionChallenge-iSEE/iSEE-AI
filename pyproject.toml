@@ -15,10 +15,14 @@ packages = [
 python  = "^3.10"
 uvicorn = "^0.27.1"
 fastapi = "^0.109.2"
+ultralytics = "^8.1.11"
 
 [tool.poetry.scripts]
 start = "isee-ai.server:run"
 main  = "main:foo"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.2"
 
 [build-system]
 requires = [
