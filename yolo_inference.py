@@ -4,7 +4,7 @@ import time
 import torch
 import cv2
 
-image_path = "bus.jpg"
+image_path = "bus2.jpg"
 output_path = 'output_image.jpg'
 
 if torch.cuda.is_available():
@@ -27,16 +27,20 @@ for xyxy, cls in zip(results[0].boxes.xyxy.tolist(), results[0].boxes.cls.tolist
 # draw bus boxes to output_path
 def draw_boxes(image_path, boxes, output_path):
     # Read the image
+    cls = boxes.cls.tolist()
+    boxes = boxes.xyxy.tolist()
+
     image = cv2.imread(image_path)
-    
     # Convert tensor to NumPy array
     boxes_np = boxes.cpu().numpy() if isinstance(boxes, torch.Tensor) else boxes
     
     # Draw bounding boxes
-    for box in boxes_np:
+    for cls, box in zip(cls, boxes_np):
+        if cls != 5:
+            continue
         x, y, x2, y2 = box
         x, y, x2, y2 = int(x), int(y), int(x2), int(y2)
         cv2.rectangle(image, (x, y), (x2, y2), (0, 255, 0), 2)  # Green rectangle with thickness 2
     cv2.imwrite(output_path, image)
 
-draw_boxes(image_path, results[0].boxes.xyxy.tolist(), output_path)
+draw_boxes(image_path, results[0].boxes, output_path)
