@@ -1,4 +1,4 @@
-name: paddleocr
+name: isee-ai
 channels:
   - conda-forge
   - defaults

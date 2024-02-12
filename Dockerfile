@@ -9,7 +9,7 @@ RUN apt-get update && \
 COPY environment.yaml .
 RUN conda env create -f environment.yaml
 
-RUN echo "conda activate paddleocr" >> ~/.bashrc
+RUN echo "conda activate isee-ai" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
 COPY . .

@@ -9,7 +9,7 @@ set -euo pipefail
 # Temporarily disable strict mode and activate conda:
 set +euo pipefail
 conda init bash
-conda activate paddleocr
+conda activate isee-ai
 
 # Re-enable strict mode:
 set -euo pipefail
