@@ -1,4 +1,4 @@
-name: paddleocr_test
+name: paddleocr
 channels:
   - defaults
 dependencies:
