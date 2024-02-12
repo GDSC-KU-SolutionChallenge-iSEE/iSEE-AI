@@ -56,9 +56,9 @@ def bus_crop_and_save(image_path, boxes, boxes_cls, output_dir):
 
 if __name__ == "__main__":
     
-    image_path = "/home/cvlab09/projects/joungbin/iSEE-AI/test2.png"
+    image_path = "/home/cvlab09/projects/joungbin/iSEE-AI/test8.jpg"
     output_path = 'output_image.jpg'
-    output_dir = './cropped_bus'
+    output_dir = './cropped_bus' # 바꾸지말기
     if torch.cuda.is_available():
         torch.cuda.set_device(0)
 

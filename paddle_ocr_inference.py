@@ -35,9 +35,12 @@ if __name__ == "__main__":
     args.det_model_dir = "./inference/det_onnx/model.onnx"
     args.rec_model_dir = "./inference/rec_onnx/model.onnx"
     args.cls_model_dir = "./inference/cls_onnx/model.onnx"
-    args.image_dir = "/home/cvlab09/projects/joungbin/iSEE-AI/cropped_bus/test9.png"
+    
     args.rec_char_dict_path = "./PaddleOCR/ppocr/utils/dict/korean_dict.txt"
     
+    for i in os.listdir("./cropped_bus"):
+        args.image_dir = f"./cropped_bus/{i}"
+        main(args)
     # import pdb;pdb.set_trace()
     main(args)
     pass
