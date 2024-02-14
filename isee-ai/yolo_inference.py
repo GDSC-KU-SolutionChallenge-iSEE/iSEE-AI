@@ -1,10 +1,7 @@
+# %%
 from typing import List
 from ultralytics import YOLO
-import time 
-import torch
-from PIL import Image, ImageDraw
-import os
-import shutil
+from PIL import Image
 
 YOLO_ONNX_PATH = "./yolo_onnx/yolov8n.onnx"
 
@@ -22,4 +19,5 @@ def yolo_inference(input_image: Image.Image)-> List[Image.Image]:
     model = YOLO(YOLO_ONNX_PATH)
     model_results = model(input_image)
     results = bus_crop(input_image, model_results[0].boxes.xyxy.tolist(), model_results[0].boxes.cls.tolist())
+    
     return results

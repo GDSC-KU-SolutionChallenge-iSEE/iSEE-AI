@@ -13,7 +13,9 @@ from PIL import Image
 import io
 from PIL import Image
 import paddle_ocr_inference
-
+import torch
+if torch.cuda.is_available():
+    torch.cuda.set_device(0)
 app = FastAPI()
 text_sys = paddle_ocr_inference.ocr_load()
 
@@ -36,9 +38,26 @@ def pil_to_cv2(pil_images: List[Image.Image]):
             result.append(opencv_image)
         return result
 
+def align_pil_image(img: Image.Image)->Image.Image:
+    if hasattr(img, '_getexif'):
+        exif = img._getexif()
+        if exif is not None:
+            orientation = exif.get(0x0112)
+            if orientation == 3:
+                img = img.transpose(Image.ROTATE_180)
+            elif orientation == 6:
+                img = img.transpose(Image.ROTATE_270)
+            elif orientation == 8:
+                img = img.transpose(Image.ROTATE_90)
+    return img
+
 @app.get("/")
 async def read_root():
-    return f"Hello {tmp}"
+    return f"Hello World"
+
+@app.get("/health")
+async def read_root():
+    return f"Server is running"
 
 @app.get("/ocr")
 async def read_root(json_body: dict):
@@ -62,7 +81,7 @@ async def detect_bus(json_body: dict):
 async def inference_pipeline(json_body: dict):
     start_time = time.time()
     image_bytes = base64.b64decode(json_body["bus_image"])
-    pil_image = Image.open(io.BytesIO(image_bytes))
+    pil_image = align_pil_image(Image.open(io.BytesIO(image_bytes)))
     cropped_images = yolo_inference.yolo_inference(pil_image)
     med_time = time.time()
     bus_images = pil_to_cv2(cropped_images)
